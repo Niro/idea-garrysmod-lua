@@ -120,7 +120,9 @@ LONG_STRING=\[=*\[[\s\S]*\]=*\]
         else { yypushback(yylength()); yybegin(xCOMMENT); }
    }
   "and"                       { return AND; }
+  "&&"                        { return AND_GLUA; }
   "break"                     { return BREAK; }
+  "continue"                  { return CONTINUE; }
   "do"                        { return DO; }
   "else"                      { return ELSE; }
   "elseif"                    { return ELSEIF; }
@@ -134,6 +136,7 @@ LONG_STRING=\[=*\[[\s\S]*\]=*\]
   "nil"                       { return NIL; }
   "not"                       { return NOT; }
   "or"                        { return OR; }
+  "||"                        { return OR_GLUA; }
   "repeat"                    { return REPEAT; }
   "return"                    { return RETURN; }
   "then"                      { return THEN; }
@@ -150,6 +153,7 @@ LONG_STRING=\[=*\[[\s\S]*\]=*\]
   "<="                        { return LE; }
   "<<"                        { return BIT_LTLT; } //lua5.2
   "~="                        { return NE; }
+  "!="                        { return NE_GLUA; }
   "~"                         { return BIT_TILDE; } //lua5.2
   "-"                         { return MINUS; }
   "+"                         { return PLUS; }

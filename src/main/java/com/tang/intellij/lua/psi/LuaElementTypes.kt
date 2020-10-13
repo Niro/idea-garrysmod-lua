@@ -23,7 +23,7 @@ object LuaElementTypes {
     val BINARY_OPS by lazy { arrayOf(
             LuaTypes.CONCAT,
             LuaTypes.LE, LuaTypes.EQ, LuaTypes.LT, LuaTypes.NE, LuaTypes.GE, LuaTypes.GT,
-            LuaTypes.AND, LuaTypes.OR,
+            LuaTypes.AND, LuaTypes.OR, LuaTypes.AND_GLUA, LuaTypes.OR_GLUA,
             LuaTypes.BIT_AND, LuaTypes.BIT_LTLT, LuaTypes.BIT_OR, LuaTypes.BIT_RTRT, LuaTypes.BIT_TILDE, LuaTypes.EXP,
             LuaTypes.PLUS, LuaTypes.MINUS, LuaTypes.MULT, LuaTypes.DIV, LuaTypes.DOUBLE_DIV, LuaTypes.MOD
     )}

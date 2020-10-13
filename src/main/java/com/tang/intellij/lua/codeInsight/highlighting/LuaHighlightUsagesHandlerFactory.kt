@@ -57,6 +57,12 @@ class LuaHighlightUsagesHandlerFactory : HighlightUsagesHandlerFactoryBase() {
                     return LoopHandler(editor, psiFile, psiElement, loop)
             }
 
+            LuaTypes.CONTINUE -> {
+                val loop = PsiTreeUtil.getParentOfType(psiElement, LuaLoop::class.java)
+                if (loop != null)
+                    return LoopHandler(editor, psiFile, psiElement, loop)
+            }
+
             else -> {
                 val parent = psiElement.parent
                 val parentType = parent.node.elementType

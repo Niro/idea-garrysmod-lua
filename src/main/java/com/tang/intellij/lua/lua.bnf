@@ -37,7 +37,9 @@
   tokens = [
         /* Keywords */
         AND = "and"
+        AND_GLUA = "&&"
         BREAK = "break"
+        CONTINUE = "continue"
         DO = "do"
         ELSE = "else"
         ELSEIF = "elseif"
@@ -51,6 +53,7 @@
         NIL = "nil"
         NOT = "not"
         OR = "or"
+        OR_GLUA = "||"
         REPEAT = "repeat"
         RETURN = "return"
         THEN = "then"
@@ -68,6 +71,7 @@
         GE = ">="
         LE = "<="
         NE = "~="
+        NE_GLUA = "!="
         MINUS = "-"
         PLUS = "+"
         MULT = "*"
@@ -148,7 +152,7 @@ private stat_impl ::=
     }
 private stat_recover ::= !(ID
     | ',' | ';'
-    | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
+    | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | 'break' | 'continue'
     | nil | true | false | STRING | NUMBER | '::' | 'goto'
     | unaryOp)
 
@@ -349,7 +353,8 @@ returnStat ::= return exprList? {
     stubClass = "com.tang.intellij.lua.stubs.LuaPlaceholderStub"
 }
 breakStat ::= break
-private lastStat ::= returnStat | breakStat
+continueStat ::= continue
+private lastStat ::= returnStat | breakStat | continueStat
 
 exprList ::= expr (',' expr)* {
     methods = [guessTypeAt]
@@ -528,7 +533,7 @@ tableFieldSep ::= ',' | ';'
 
 binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '..' |
     '<' | '<=' | '>' | '>=' | '==' | '~=' |
-    'and' | 'or'
+    'and' | 'or' | '&&' | '||' | '!='
     // lua5.3
     | '|' | '&' | '>>' | '<<' | '~' | '//'
 

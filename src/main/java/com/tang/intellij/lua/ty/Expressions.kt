@@ -80,10 +80,10 @@ private fun LuaBinaryExpr.infer(context: SearchContext): ITy {
         when (it) {
         //..
             LuaTypes.CONCAT -> Ty.STRING
-        //<=, ==, <, ~=, >=, >
-            LuaTypes.LE, LuaTypes.EQ, LuaTypes.LT, LuaTypes.NE, LuaTypes.GE, LuaTypes.GT -> Ty.BOOLEAN
+        //<=, ==, <, ~=, >=, >, !=
+            LuaTypes.LE, LuaTypes.EQ, LuaTypes.LT, LuaTypes.NE, LuaTypes.NE_GLUA, LuaTypes.GE, LuaTypes.GT -> Ty.BOOLEAN
         //and, or
-            LuaTypes.AND, LuaTypes.OR -> guessAndOrType(this, operator, context)
+            LuaTypes.AND, LuaTypes.OR, LuaTypes.AND_GLUA, LuaTypes.OR_GLUA -> guessAndOrType(this, operator, context)
         //&, <<, |, >>, ~, ^,    +, -, *, /, //, %
             LuaTypes.BIT_AND, LuaTypes.BIT_LTLT, LuaTypes.BIT_OR, LuaTypes.BIT_RTRT, LuaTypes.BIT_TILDE, LuaTypes.EXP,
             LuaTypes.PLUS, LuaTypes.MINUS, LuaTypes.MULT, LuaTypes.DIV, LuaTypes.DOUBLE_DIV, LuaTypes.MOD -> guessBinaryOpType(this, context)
@@ -95,7 +95,7 @@ private fun LuaBinaryExpr.infer(context: SearchContext): ITy {
 private fun guessAndOrType(binaryExpr: LuaBinaryExpr, operator: IElementType?, context:SearchContext): ITy {
     val rhs = binaryExpr.right
     //and
-    if (operator == LuaTypes.AND)
+    if (operator == LuaTypes.AND || operator == LuaTypes.AND_GLUA)
         return infer(rhs, context)
 
     //or

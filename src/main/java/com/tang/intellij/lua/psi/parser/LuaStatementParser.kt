@@ -32,6 +32,7 @@ object LuaStatementParser : GeneratedParserUtilBase() {
             DOUBLE_COLON -> parseLabelStatement(b)
             GOTO -> parseGotoStatement(b)
             BREAK -> parseBreakStatement(b)
+            CONTINUE -> parseContinueStatement(b)
             RETURN -> parseReturnStatement(b, l)
             LOCAL -> parseLocalDef(b, l)
             FOR -> parseForStatement(b, l)
@@ -198,6 +199,14 @@ object LuaStatementParser : GeneratedParserUtilBase() {
         b.advanceLexer()
 
         doneStat(b, m, BREAK_STAT)
+        return m
+    }
+
+    private fun parseContinueStatement(b: PsiBuilder): PsiBuilder.Marker {
+        val m = b.mark()
+        b.advanceLexer()
+
+        doneStat(b, m, CONTINUE_STAT)
         return m
     }
 

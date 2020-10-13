@@ -27,11 +27,11 @@ object LuaExpressionParser {
 
     enum class ExprType(val ops: TokenSet) {
         // or
-        T_OR(TokenSet.create(OR)),
+        T_OR(TokenSet.create(OR, OR_GLUA)),
         // and
-        T_AND(TokenSet.create(AND)),
+        T_AND(TokenSet.create(AND, AND_GLUA)),
         // < > <= >= ~= ==
-        T_CONDITION(TokenSet.create(GT, LT, GE, LE, NE, EQ)),
+        T_CONDITION(TokenSet.create(GT, LT, GE, LE, NE, EQ, NE_GLUA)),
         // |
         T_BIT_OR(TokenSet.create(BIT_OR)),
         // ~

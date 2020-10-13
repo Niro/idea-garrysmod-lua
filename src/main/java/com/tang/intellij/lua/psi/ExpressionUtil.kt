@@ -81,6 +81,12 @@ class ExpressionUtil {
                 LuaTypes.AND -> {
                     return if (l.bValue) r else l
                 }
+                LuaTypes.OR_GLUA -> {
+                    return if (l.bValue) l else r
+                }
+                LuaTypes.AND_GLUA -> {
+                    return if (l.bValue) r else l
+                }
                 // +
                 LuaTypes.PLUS -> {
                     n = l.nValue + r.nValue

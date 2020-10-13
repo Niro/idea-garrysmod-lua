@@ -143,6 +143,7 @@ class LocalAndGlobalCompletionProvider(private val mask: Int) : ClassMemberCompl
         private val KEYWORD_TOKENS = TokenSet.create(
                 LuaTypes.AND,
                 LuaTypes.BREAK,
+                LuaTypes.CONTINUE,
                 LuaTypes.DO,
                 LuaTypes.ELSE,
                 //LuaTypes.ELSEIF,

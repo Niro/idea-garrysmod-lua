@@ -43,10 +43,10 @@ public class LuaParser implements PsiParser, LightPsiParser {
     create_token_set_(BINARY_EXPR, CALL_EXPR, CLOSURE_EXPR, EXPR,
       INDEX_EXPR, LITERAL_EXPR, NAME_EXPR, PAREN_EXPR,
       TABLE_EXPR, UNARY_EXPR),
-    create_token_set_(ASSIGN_STAT, BREAK_STAT, DO_STAT, EMPTY_STAT,
-      EXPR_STAT, FOR_A_STAT, FOR_B_STAT, GOTO_STAT,
-      IF_STAT, LABEL_STAT, REPEAT_STAT, RETURN_STAT,
-      WHILE_STAT),
+    create_token_set_(ASSIGN_STAT, BREAK_STAT, CONTINUE_STAT, DO_STAT,
+      EMPTY_STAT, EXPR_STAT, FOR_A_STAT, FOR_B_STAT,
+      GOTO_STAT, IF_STAT, LABEL_STAT, REPEAT_STAT,
+      RETURN_STAT, WHILE_STAT),
   };
 
   /* ********************************************************** */
@@ -149,7 +149,7 @@ public class LuaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // '+' | '-' | '*' | '/' | '^' | '%' | '..' |
   //     '<' | '<=' | '>' | '>=' | '==' | '~=' |
-  //     'and' | 'or'
+  //     'and' | 'or' | '&&' | '||' | '!='
   //     // lua5.3
   //     | '|' | '&' | '>>' | '<<' | '~' | '//'
   public static boolean binaryOp(PsiBuilder b, int l) {
@@ -171,6 +171,9 @@ public class LuaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, NE);
     if (!r) r = consumeToken(b, AND);
     if (!r) r = consumeToken(b, OR);
+    if (!r) r = consumeToken(b, AND_GLUA);
+    if (!r) r = consumeToken(b, OR_GLUA);
+    if (!r) r = consumeToken(b, NE_GLUA);
     if (!r) r = consumeToken(b, BIT_OR);
     if (!r) r = consumeToken(b, BIT_AND);
     if (!r) r = consumeToken(b, BIT_RTRT);
@@ -337,6 +340,19 @@ public class LuaParser implements PsiParser, LightPsiParser {
     r = r && funcBody(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  /* ********************************************************** */
+  // continue
+  public static boolean continueStat(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "continueStat")) return false;
+    if (!nextTokenIs(b, CONTINUE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, CONTINUE);
+    register_hook_(b, LEFT_BINDER, MY_LEFT_COMMENT_BINDER);
+    exit_section_(b, m, CONTINUE_STAT, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -748,14 +764,14 @@ public class LuaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // returnStat | breakStat
+  // returnStat | breakStat | continueStat
   static boolean lastStat(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "lastStat")) return false;
-    if (!nextTokenIs(b, "", BREAK, RETURN)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = returnStat(b, l + 1);
     if (!r) r = breakStat(b, l + 1);
+    if (!r) r = continueStat(b, l + 1);
     register_hook_(b, LEFT_BINDER, MY_LEFT_COMMENT_BINDER);
     exit_section_(b, m, null, r);
     return r;
@@ -1194,7 +1210,7 @@ public class LuaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // !(ID
   //     | ',' | ';'
-  //     | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
+  //     | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | 'break' | 'continue'
   //     | nil | true | false | STRING | NUMBER | '::' | 'goto'
   //     | unaryOp)
   static boolean stat_recover(PsiBuilder b, int l) {
@@ -1208,7 +1224,7 @@ public class LuaParser implements PsiParser, LightPsiParser {
 
   // ID
   //     | ',' | ';'
-  //     | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
+  //     | 'local' | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | 'break' | 'continue'
   //     | nil | true | false | STRING | NUMBER | '::' | 'goto'
   //     | unaryOp
   private static boolean stat_recover_0(PsiBuilder b, int l) {
@@ -1226,6 +1242,7 @@ public class LuaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, FOR);
     if (!r) r = consumeToken(b, RETURN);
     if (!r) r = consumeToken(b, BREAK);
+    if (!r) r = consumeToken(b, CONTINUE);
     if (!r) r = consumeToken(b, NIL);
     if (!r) r = consumeToken(b, TRUE);
     if (!r) r = consumeToken(b, FALSE);

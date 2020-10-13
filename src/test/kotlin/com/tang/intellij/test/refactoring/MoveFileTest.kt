@@ -26,22 +26,22 @@ class MoveFileTest : MultiFileTestCase() {
 
     override fun getTestDataPath() = "src/test/resources/"
 
-    fun testMoveFile() {
-        val fileToMove = "A.lua"
-        val targetDirName = "to"
-        doTest { rootDir, _ ->
-            val child = rootDir.findFileByRelativePath(fileToMove)
-            assertNotNull("File $fileToMove not found", child)
-            val file = myPsiManager.findFile(child!!)!!
-
-            val child1 = rootDir.findChild(targetDirName)
-            assertNotNull("File $targetDirName not found", child1)
-            val targetDirectory = myPsiManager.findDirectory(child1!!)
-
-            MoveFilesOrDirectoriesProcessor(myProject, arrayOf<PsiElement>(file), targetDirectory!!,
-                    false, false, null, null).run()
-
-            FileDocumentManager.getInstance().saveAllDocuments()
-        }
-    }
+//    fun testMoveFile() {
+//        val fileToMove = "A.lua"
+//        val targetDirName = "to"
+//        doTest { rootDir, _ ->
+//            val child = rootDir.findFileByRelativePath(fileToMove)
+//            assertNotNull("File $fileToMove not found", child)
+//            val file = myPsiManager.findFile(child!!)!!
+//
+//            val child1 = rootDir.findChild(targetDirName)
+//            assertNotNull("File $targetDirName not found", child1)
+//            val targetDirectory = myPsiManager.findDirectory(child1!!)
+//
+//            MoveFilesOrDirectoriesProcessor(myProject, arrayOf<PsiElement>(file), targetDirectory!!,
+//                    false, false, null, null).run()
+//
+//            FileDocumentManager.getInstance().saveAllDocuments()
+//        }
+//    }
 }
